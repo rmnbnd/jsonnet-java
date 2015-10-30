@@ -1,4 +1,4 @@
-package java.jsonnet.core;
+package java.jsonnet.core.model;
 
 public enum State {
     BEGIN,
