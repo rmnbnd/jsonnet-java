@@ -1,4 +1,4 @@
-package java.jsonnet.core.model;
+package jsonnet.core.model;
 
 public enum Kind {
     BRACE_L,

@@ -1,4 +1,4 @@
-package java.jsonnet.util;
+package jsonnet.util;
 
 public final class LexerUtils {
 
