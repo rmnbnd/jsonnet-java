@@ -8,7 +8,7 @@ import java.util.Queue;
 
 public class Lexer {
 
-    public Queue<Token> lex(String input) {
+    public Queue<Token> lex(Strifng input) {
         Queue<Token> tokens = new LinkedList<>();
 
         for (int i = 0; i < input.length(); i++) {
