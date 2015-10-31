@@ -8,7 +8,7 @@ import java.util.List;
 public class Lexer {
 
     public List<Token> lex(String input) {
-        List<Token> tokens = new ArrayList<>();
+        List<jsonnet.core.model.Token> tokens = new ArrayList<>();
         return tokens;
     }
 
