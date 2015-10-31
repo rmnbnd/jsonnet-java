@@ -6,14 +6,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.List;
+import java.util.Queue;
 
 import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class LexerTest {
 
-    Lexer lexer = new Lexer();
+    private Lexer lexer = new Lexer();
 
     @Test
     public void shouldGetEmptyTokensList() {
@@ -21,7 +21,7 @@ public class LexerTest {
         String input = "";
 
         // when
-        List<Token> tokens = lexer.lex(input);
+        Queue<Token> tokens = lexer.lex(input);
 
         // then
         assertTrue(tokens.isEmpty());
@@ -33,7 +33,7 @@ public class LexerTest {
         JsonObject input = new JsonObject();
 
         // when
-        List<Token> tokens = lexer.lex(input.toString());
+        Queue<Token> tokens = lexer.lex(input.toString());
 
         // then
         assertTrue(tokens.size() == 2);

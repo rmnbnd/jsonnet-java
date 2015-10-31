@@ -3,13 +3,13 @@ package jsonnet.core;
 import jsonnet.core.model.Kind;
 import jsonnet.core.model.Token;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Lexer {
 
-    public List<Token> lex(String input) {
-        List<Token> tokens = new ArrayList<>();
+    public Queue<Token> lex(String input) {
+        Queue<Token> tokens = new LinkedList<>();
 
         for (int i = 0; i < input.length(); i++) {
             Kind kind = null;
