@@ -11,16 +11,16 @@ public class Parser {
 
     private Lexer lexer = new Lexer();
 
-    public void doParse(String input) {
+    public AST doParse(String input) {
         Queue<Token> tokens = lexer.lex(input);
-        parse(tokens);
+        return parse(tokens);
     }
 
-    private void parse(Queue<Token> tokens) {
+    private AST parse(Queue<Token> tokens) {
         Token begin = tokens.peek();
         switch (begin.getKind()) {
             default:
-                parseTerminal(tokens);
+                return parseTerminal(tokens);
         }
     }
 
