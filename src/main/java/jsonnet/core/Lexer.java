@@ -20,9 +20,11 @@ public class Lexer {
                     continue;
                 case '{':
                     kind = Kind.BRACE_L;
+                    data = "{";
                     break;
                 case '}':
                     kind = Kind.BRACE_R;
+                    data = "}";
                     break;
             }
             Token token = new Token(kind, data);
