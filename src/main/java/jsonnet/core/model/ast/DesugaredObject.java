@@ -8,6 +8,7 @@ public class DesugaredObject extends AST {
     private List<AST> asts;
 
     public DesugaredObject(List<Field> fields, List<AST> asts) {
+        super(ASTType.AST_DESUGARED_OBJECT);
         this.fields = fields;
         this.asts = asts;
     }
