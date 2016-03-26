@@ -9,6 +9,8 @@ public class Desugarer {
 
     public void desugarFile(AST ast) {
         desugar(ast, 0);
+
+        ast = new Local(ast);
     }
 
     private void desugar(AST ast, int objectLevel) {
