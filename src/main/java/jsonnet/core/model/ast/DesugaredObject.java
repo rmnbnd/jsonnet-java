@@ -16,4 +16,11 @@ public class DesugaredObject extends AST {
 
     }
 
+    public List<Field> getFields() {
+        return fields;
+    }
+
+    public List<AST> getAsts() {
+        return asts;
+    }
 }
