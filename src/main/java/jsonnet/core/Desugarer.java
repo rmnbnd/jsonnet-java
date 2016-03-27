@@ -7,10 +7,13 @@ import java.util.List;
 
 public class Desugarer {
 
-    public void desugarFile(AST ast) {
+    private AST astRef;
+
+    public AST desugarFile(AST ast) {
+
         desugar(ast, 0);
 
-        ast = new Local(ast);
+        return new Local(astRef);
     }
 
     private void desugar(AST ast, int objectLevel) {
@@ -26,7 +29,7 @@ public class Desugarer {
             List<DesugaredObject.Field> newFields = new ArrayList<>();
             List<AST> newAsts = new ArrayList<>();
 
-            ast = new DesugaredObject(newFields, newAsts);
+            astRef = new DesugaredObject(newFields, newAsts);
         }
         else if (ast.getType() == ASTType.AST_SELF) {
             // Nothing to do.

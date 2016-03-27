@@ -10,6 +10,8 @@ import org.junit.runners.JUnit4;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(JUnit4.class)
 public class InterpreterTest {
 
@@ -24,6 +26,9 @@ public class InterpreterTest {
         Local ast = new Local(object);
 
         // when
-        interpreter.evaluate(ast, 0);
+        String json = interpreter.evaluate(ast, 0);
+
+        // then
+        assertEquals("{}", json);
     }
 }

@@ -32,7 +32,7 @@ public class Interpreter {
                 HeapObject heapObject = (HeapObject)sctrach.getV().getH();
                 Map<String, Identifier> fields = objectFields(heapObject);
                 if (fields.isEmpty()) {
-                    result.append("{ }");
+                    result.append("{}");
                 }
             }
         }
