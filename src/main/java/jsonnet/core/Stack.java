@@ -3,17 +3,15 @@ package jsonnet.core;
 import jsonnet.core.model.ast.AST;
 import jsonnet.core.model.vm.FrameKind;
 
-import java.util.List;
-
 public class Stack {
 
-    private List<Frame> stack;
-
-    public List<Frame> getStack() {
-        return stack;
-    }
+    private java.util.Stack<Frame> stack = new java.util.Stack<>();
 
     public void newFrame(FrameKind frame, AST ast) {
-        stack.add(new Frame(frame, ast));
+        stack.push(new Frame(frame, ast));
+    }
+
+    public java.util.Stack<Frame> getStack() {
+        return stack;
     }
 }
