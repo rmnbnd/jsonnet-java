@@ -1,21 +1,21 @@
 package jsonnet.process;
 
-import org.apache.commons.io.IOUtils;
+import jsonnet.utils.FileUtils;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class JsonnetExecutorTest {
 
     private JsonnetExecutor jsonnetExecutor = new JsonnetExecutor();
+    private FileUtils fileUtils = new FileUtils();
 
     @Test
     public void shouldReturnEmptyObject() {
         // given
-        String input = getFileWithUtil("jsonnet/1.jsonnet");
-        String expected = getFileWithUtil("json/1.json");
+        String input = fileUtils.getFileWithUtil("jsonnet/1.jsonnet");
+        String expected = fileUtils.getFileWithUtil("json/1.json");
 
         // when
         String actual = jsonnetExecutor.jsonnetParse(input);
@@ -24,16 +24,18 @@ public class JsonnetExecutorTest {
         assertEquals(expected, actual);
     }
 
-    private String getFileWithUtil(String fileName) {
-        String result = null;
+    @Test
+    @Ignore
+    public void shouldReturnObjectWithOneField() {
+        // given
+        String input = fileUtils.getFileWithUtil("jsonnet/2.jsonnet");
+        String expected = fileUtils.getFileWithUtil("json/2.json");
 
-        ClassLoader classLoader = getClass().getClassLoader();
-        try {
-            result = IOUtils.toString(classLoader.getResourceAsStream(fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
+        // when
+        String actual = jsonnetExecutor.jsonnetParse(input);
+
+        // then
+        assertEquals(expected, actual);
     }
 
 }

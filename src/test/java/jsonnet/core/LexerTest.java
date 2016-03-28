@@ -1,8 +1,8 @@
 package jsonnet.core;
 
-import com.google.gson.JsonObject;
 import jsonnet.core.model.Kind;
 import jsonnet.core.model.Token;
+import jsonnet.utils.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 public class LexerTest {
 
     private Lexer lexer = new Lexer();
+    private FileUtils fileUtils = new FileUtils();
 
     @Test
     public void shouldGetEmptyTokensList() {
@@ -32,10 +33,10 @@ public class LexerTest {
     @Test
     public void shouldGetBracesTokens() {
         // given
-        JsonObject input = new JsonObject();
+        String input = fileUtils.getFileWithUtil("jsonnet/1.jsonnet");
 
         // when
-        Queue<Token> tokens = lexer.lex(input.toString());
+        Queue<Token> tokens = lexer.lex(input);
 
         // then
         assertTrue(tokens.size() == 2);
@@ -44,10 +45,10 @@ public class LexerTest {
     @Test
     public void shouldGetBracesDataTokens() {
         // given
-        JsonObject input = new JsonObject();
+        String input = fileUtils.getFileWithUtil("jsonnet/1.jsonnet");
 
         // when
-        Queue<Token> tokens = lexer.lex(input.toString());
+        Queue<Token> tokens = lexer.lex(input);
 
         // then
         assertEquals("{", tokens.poll().getData());
@@ -57,13 +58,55 @@ public class LexerTest {
     @Test
     public void shouldGetBracesKindTokens() {
         // given
-        JsonObject input = new JsonObject();
+        String input = fileUtils.getFileWithUtil("jsonnet/1.jsonnet");
 
         // when
-        Queue<Token> tokens = lexer.lex(input.toString());
+        Queue<Token> tokens = lexer.lex(input);
 
         // then
         assertEquals(Kind.BRACE_L, tokens.poll().getKind());
+        assertEquals(Kind.BRACE_R, tokens.poll().getKind());
+    }
+
+    @Test
+    public void shouldReturnFourTokens() {
+        // given
+        String input = fileUtils.getFileWithUtil("jsonnet/2.jsonnet");
+
+        // when
+        Queue<Token> tokens = lexer.lex(input);
+
+        // then
+        assertEquals(4, tokens.size());
+    }
+
+    @Test
+    public void shouldReturnFieldNameAndValue() {
+        // given
+        String input = fileUtils.getFileWithUtil("jsonnet/2.jsonnet");
+
+        // when
+        Queue<Token> tokens = lexer.lex(input);
+
+        // then
+        assertEquals("{", tokens.poll().getData());
+        assertEquals("fieldKey", tokens.poll().getData());
+        assertEquals("fieldValue", tokens.poll().getData());
+        assertEquals("}", tokens.poll().getData());
+    }
+
+    @Test
+    public void shouldReturnKindStringDoubleForFieldNameAndValue() {
+        // given
+        String input = fileUtils.getFileWithUtil("jsonnet/2.jsonnet");
+
+        // when
+        Queue<Token> tokens = lexer.lex(input);
+
+        // then
+        assertEquals(Kind.BRACE_L, tokens.poll().getKind());
+        assertEquals(Kind.STRING_DOUBLE, tokens.poll().getKind());
+        assertEquals(Kind.STRING_DOUBLE, tokens.poll().getKind());
         assertEquals(Kind.BRACE_R, tokens.poll().getKind());
     }
 
