@@ -4,15 +4,24 @@ public class ObjectField {
 
     private Kind kind;
     private Identifier id;
+    private AST key;
     private AST body;
 
-    enum Kind {
+    public enum Kind {
+        FIELD_STR,
         LOCAL
     }
 
     public ObjectField(Kind kind, Identifier identifier, AST body) {
         this.kind = kind;
         this.id = identifier;
+        this.body = body;
+    }
+
+    public ObjectField(Kind kind, Identifier identifier, AST key, AST body) {
+        this.kind = kind;
+        this.id = identifier;
+        this.key = key;
         this.body = body;
     }
 
@@ -26,6 +35,10 @@ public class ObjectField {
 
     public Identifier getId() {
         return id;
+    }
+
+    public AST getKey() {
+        return key;
     }
 
     public AST getBody() {

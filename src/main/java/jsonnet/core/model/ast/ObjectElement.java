@@ -13,6 +13,11 @@ public class ObjectElement extends AST {
         super(AST_OBJECT);
     }
 
+    public ObjectElement(List<ObjectField> fields) {
+        super(AST_OBJECT);
+        this.fields = fields;
+    }
+
     public ObjectElement(ASTType type) {
         super(type);
     }
