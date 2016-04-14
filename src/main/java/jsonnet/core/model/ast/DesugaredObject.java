@@ -13,10 +13,6 @@ public class DesugaredObject extends AST {
         this.asts = asts;
     }
 
-    public class Field {
-
-    }
-
     public List<Field> getFields() {
         return fields;
     }

@@ -8,6 +8,7 @@ public class ObjectField {
     private AST body;
 
     public enum Kind {
+        FIELD_EXPR,
         FIELD_STR,
         LOCAL
     }
@@ -33,6 +34,10 @@ public class ObjectField {
         return kind;
     }
 
+    public void setKind(Kind kind) {
+        this.kind = kind;
+    }
+
     public Identifier getId() {
         return id;
     }
@@ -43,5 +48,9 @@ public class ObjectField {
 
     public AST getBody() {
         return body;
+    }
+
+    public void setBody(AST body) {
+        this.body = body;
     }
 }

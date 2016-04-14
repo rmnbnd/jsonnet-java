@@ -2,6 +2,7 @@ package jsonnet.core;
 
 import jsonnet.core.model.ast.AST;
 import jsonnet.core.model.ast.DesugaredObject;
+import jsonnet.core.model.ast.Field;
 import jsonnet.core.model.ast.Local;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +21,7 @@ public class InterpreterTest {
     @Test
     public void testEvaluate() throws Exception {
         // given
-        List<DesugaredObject.Field> fields = new ArrayList<>();
+        List<Field> fields = new ArrayList<>();
         List<AST> asts = new ArrayList<>();
         DesugaredObject object = new DesugaredObject(fields, asts);
         Local ast = new Local(object);
