@@ -13,6 +13,12 @@ public class ObjectField {
         LOCAL
     }
 
+    public enum Hide {
+        HIDDEN,
+        INHERIT,
+        VISIBLE,
+    };
+
     public ObjectField(Kind kind, Identifier identifier, AST body) {
         this.kind = kind;
         this.id = identifier;

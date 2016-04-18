@@ -6,7 +6,8 @@ public class Value {
     private ValueHeapObject v = new ValueHeapObject();
 
     public enum Type {
-        OBJECT
+        OBJECT,
+        STRING
     }
 
     public class ValueHeapObject {
