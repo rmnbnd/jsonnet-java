@@ -47,6 +47,6 @@ public class InterpreterTest {
         String json = interpreter.evaluate(ast, 0);
 
         // then
-        assertEquals("{}", json);
+        assertEquals("{fieldKey:fieldValue}", json);
     }
 }
