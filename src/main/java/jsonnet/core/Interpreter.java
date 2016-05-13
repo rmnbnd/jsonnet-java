@@ -9,8 +9,11 @@ import java.util.*;
 
 import static jsonnet.core.model.state.Value.Type.OBJECT;
 import static jsonnet.core.model.state.Value.Type.STRING;
+import static jsonnet.utils.StringUtils.jsonnetStringParse;
 
 public class Interpreter {
+
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     private Value scratch = new Value();
     private Stack stack = new Stack();
@@ -20,7 +23,7 @@ public class Interpreter {
     public String evaluate(AST ast, int initialStackSize) {
         populateStack(ast, initialStackSize);
         processStack(initialStackSize);
-        return manifestJson();
+        return manifestJson(true, "");
     }
 
     private void populateStack(AST ast, int initialStackSize) {
@@ -79,7 +82,7 @@ public class Interpreter {
         }
     }
 
-    private String manifestJson() {
+    private String manifestJson(boolean multiLine, String indent) {
         StringBuilder result = new StringBuilder();
         switch (scratch.getT()) {
             case OBJECT: {
@@ -91,25 +94,35 @@ public class Interpreter {
                 if (fields.isEmpty()) {
                     result.append("{}");
                 } else {
-                    // TODO: implement the parsing to string
-                    String prefix = "{";
+                    String prefix = multiLine ? "{" + LINE_SEPARATOR : "{";
+                    String localIndent = multiLine ? indent + "  " : indent;
                     for (Map.Entry<String, Identifier> field : fields.entrySet()) {
                         AST body = objectIndex(heapObject, field.getValue(), 0);
                         stack.getStack().peek().setVal(scratch);
                         populateStack(body, stack.getStack().size());
                         processStack(stack.getStack().size());
-                        String vstr = manifestJson();
+                        String vstr = manifestJson(multiLine, indent);
                         scratch = stack.getStack().peek().getVal();
                         stack.getStack().pop();
-                        result.append(prefix).append(field.getKey()).append(":").append(vstr);
+                        result
+                                .append(prefix)
+                                .append(localIndent)
+                                .append("\"")
+                                .append(field.getKey())
+                                .append("\": ")
+                                .append(vstr);
+                        prefix = multiLine ? "," + LINE_SEPARATOR : ", ";
                     }
-                    result.append("}");
+                    result
+                            .append(multiLine ? LINE_SEPARATOR : "")
+                            .append(indent)
+                            .append("}");
                 }
                 break;
             }
             case STRING: {
                 String str = ((HeapString) scratch.getV().getH()).getValue();
-                result.append(str);
+                result.append(jsonnetStringParse(str, false));
                 break;
             }
         }
