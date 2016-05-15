@@ -25,11 +25,23 @@ public class JsonnetExecutorTest {
     }
 
     @Test
-    @Ignore
     public void shouldReturnObjectWithOneField() {
         // given
         String input = fileUtils.getFileWithUtil("jsonnet/2.jsonnet");
         String expected = fileUtils.getFileWithUtil("json/2.json");
+
+        // when
+        String actual = jsonnetExecutor.jsonnetParse(input);
+
+        // then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void shouldReturnObjectWithArray() {
+        // given
+        String input = fileUtils.getFileWithUtil("jsonnet/3.jsonnet");
+        String expected = fileUtils.getFileWithUtil("json/3.json");
 
         // when
         String actual = jsonnetExecutor.jsonnetParse(input);

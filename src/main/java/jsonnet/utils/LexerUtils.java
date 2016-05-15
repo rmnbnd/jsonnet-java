@@ -16,6 +16,7 @@ public final class LexerUtils {
 
     public static boolean isSymbol(char c) {
         switch (c) {
+            case ':':
             case '&':
             case '|':
             case '^':

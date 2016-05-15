@@ -11,5 +11,7 @@ public enum Kind {
     SEMICOLON,
 
     // Arbitrary length lexemes
+    OPERATOR,
+    NUMBER,
     STRING_DOUBLE
 }
