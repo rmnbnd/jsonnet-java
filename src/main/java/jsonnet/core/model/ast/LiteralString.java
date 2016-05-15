@@ -25,4 +25,11 @@ public class LiteralString extends AST {
         return tokenKind;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setTokenKind(TokenKind tokenKind) {
+        this.tokenKind = tokenKind;
+    }
 }

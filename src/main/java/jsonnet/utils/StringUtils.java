@@ -8,7 +8,7 @@ public final class StringUtils {
                 (single ? "\'" : "\"");
     }
 
-    private static String jsonnetStringEscape(String string) {
+    public static String jsonnetStringEscape(String string) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);

@@ -5,6 +5,8 @@ import jsonnet.core.model.ast.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jsonnet.utils.StringUtils.jsonnetStringEscape;
+
 public class Desugarer {
 
     private AST astRef;
@@ -17,7 +19,12 @@ public class Desugarer {
     }
 
     private void desugar(AST ast, int objectLevel) {
-        if (ast.getType() == ASTType.AST_OBJECT) {
+        if (ast.getType() == ASTType.AST_ARRAY) {
+            Array astArray = (Array) ast;
+            for (Element element : astArray.getElements()) {
+                desugar(element.getExpr(), objectLevel);
+            }
+        } else if (ast.getType() == ASTType.AST_OBJECT) {
             ObjectElement astObject = (ObjectElement) ast;
             if (objectLevel == 0) {
                 Identifier identifier = new Identifier("$");
@@ -35,8 +42,12 @@ public class Desugarer {
                 }
             }
             astRef = new DesugaredObject(newFields, newAsts);
-        } else if (ast.getType() == ASTType.AST_LITERAL_STRING) {
+        } else if (ast.getType() == ASTType.AST_LITERAL_NUMBER) {
             // Nothing to do.
+        } else if (ast.getType() == ASTType.AST_LITERAL_STRING) {
+            LiteralString literalString = (LiteralString) ast;
+            literalString.setValue(jsonnetStringEscape(literalString.getValue()));
+            literalString.setTokenKind(LiteralString.TokenKind.DOUBLE);
         } else if (ast.getType() == ASTType.AST_SELF) {
             // Nothing to do.
         }
