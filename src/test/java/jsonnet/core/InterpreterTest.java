@@ -13,6 +13,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class InterpreterTest {
 
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
     private Interpreter interpreter = new Interpreter();
 
     @Test
@@ -47,7 +49,7 @@ public class InterpreterTest {
         String json = interpreter.evaluate(ast, 0);
 
         // then
-        assertEquals("{\r\n  \"fieldKey\": \"fieldValue\"\r\n}", json);
+        assertEquals("{" + LINE_SEPARATOR + "  \"fieldKey\": \"fieldValue\"" + LINE_SEPARATOR + "}", json);
     }
 
     @Test
@@ -71,12 +73,12 @@ public class InterpreterTest {
         String json = interpreter.evaluate(ast, 0);
 
         // then
-        assertEquals("{\r\n" +
-                "  \"array\": [\r\n" +
-                "    1,\r\n" +
-                "    2,\r\n" +
-                "    3\r\n" +
-                "  ]\r\n" +
+        assertEquals("{" + LINE_SEPARATOR +
+                "  \"array\": [" + LINE_SEPARATOR +
+                "    1," + LINE_SEPARATOR +
+                "    2," + LINE_SEPARATOR +
+                "    3" + LINE_SEPARATOR +
+                "  ]" + LINE_SEPARATOR +
                 "}", json);
     }
 }
