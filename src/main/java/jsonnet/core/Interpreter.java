@@ -7,8 +7,7 @@ import jsonnet.core.model.vm.FrameKind;
 
 import java.util.*;
 
-import static jsonnet.core.model.state.Value.Type.OBJECT;
-import static jsonnet.core.model.state.Value.Type.STRING;
+import static jsonnet.core.model.state.Value.Type.*;
 import static jsonnet.utils.StringUtils.jsonnetStringParse;
 
 public class Interpreter {
@@ -28,11 +27,22 @@ public class Interpreter {
 
     private void populateStack(AST ast, int initialStackSize) {
         switch (ast.getType()) {
+            case AST_ARRAY: {
+                Array arrayObject = (Array) ast;
+                scratch = makeArray(new ArrayList<HeapThunk>());
+                List<HeapThunk> elements = ((HeapArray) scratch.getV().getH()).getElements();
+                for (Element element : arrayObject.getElements()) {
+                    HeapThunk elTh = new HeapThunk(element.getExpr());
+                    elements.add(elTh);
+                }
+                break;
+            }
             case AST_LOCAL: {
                 Local localObject = (Local) ast;
                 stack.newFrame(FrameKind.FRAME_LOCAL, ast);
                 ast = localObject.getBody();
-                evaluate(ast, initialStackSize);
+                populateStack(ast, initialStackSize);
+                processStack(initialStackSize);
                 break;
             }
             case AST_DESUGARED_OBJECT: {
@@ -44,8 +54,14 @@ public class Interpreter {
                     List<Field> fit = desugaredObject.getFields();
                     stack.getStack().peek().setFit(fit);
                     ast = fit.get(0).getName();
-                    evaluate(ast, initialStackSize);
+                    populateStack(ast, initialStackSize);
+                    processStack(initialStackSize);
                 }
+                break;
+            }
+            case AST_LITERAL_NUMBER: {
+                LiteralNumber literalNumber = (LiteralNumber) ast;
+                scratch = makeDoubleCheck(literalNumber.getValue());
                 break;
             }
             case AST_LITERAL_STRING: {
@@ -85,6 +101,38 @@ public class Interpreter {
     private String manifestJson(boolean multiLine, String indent) {
         StringBuilder result = new StringBuilder();
         switch (scratch.getT()) {
+            case ARRAY: {
+                HeapArray arrayObject = (HeapArray) scratch.getV().getH();
+                if (arrayObject.getElements().size() == 0) {
+                    result.append("[ ]");
+                } else {
+                    String prefix = multiLine ? "[" + LINE_SEPARATOR : "[";
+                    String localIndent = multiLine ? indent + "  " : indent;
+                    for (HeapThunk element : arrayObject.getElements()) {
+                        stack.newCall();
+                        stack.getStack().peek().setVal(scratch);
+                        populateStack(element.getBody(), stack.getStack().size());
+                        processStack(stack.getStack().size());
+                        String stringElement = manifestJson(multiLine, localIndent);
+                        scratch = stack.getStack().peek().getVal();
+                        stack.getStack().pop();
+                        result
+                                .append(prefix)
+                                .append(localIndent)
+                                .append(stringElement);
+                        prefix = multiLine ? "," + LINE_SEPARATOR : ", ";
+                    }
+                    result
+                            .append(multiLine ? LINE_SEPARATOR : "")
+                            .append(indent)
+                            .append("]");
+                }
+                break;
+            }
+            case DOUBLE: {
+                result.append((int) scratch.getV().getD());
+                break;
+            }
             case OBJECT: {
                 HeapObject heapObject = (HeapObject) scratch.getV().getH();
                 Map<String, Identifier> fields = new HashMap<>();
@@ -101,7 +149,7 @@ public class Interpreter {
                         stack.getStack().peek().setVal(scratch);
                         populateStack(body, stack.getStack().size());
                         processStack(stack.getStack().size());
-                        String vstr = manifestJson(multiLine, indent);
+                        String vstr = manifestJson(multiLine, localIndent);
                         scratch = stack.getStack().peek().getVal();
                         stack.getStack().pop();
                         result
@@ -190,4 +238,23 @@ public class Interpreter {
         r.getV().setH(new HeapString(value));
         return r;
     }
+
+    private Value makeArray(List<HeapThunk> v) {
+        Value r = new Value();
+        r.setT(ARRAY);
+        r.getV().setH(new HeapArray(v));
+        return r;
+    }
+
+    private Value makeDoubleCheck(int value) {
+        return makeDouble(value);
+    }
+
+    private Value makeDouble(int value) {
+        Value r = new Value();
+        r.setT(DOUBLE);
+        r.getV().setD(value);
+        return r;
+    }
+
 }

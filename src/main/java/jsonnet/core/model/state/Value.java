@@ -6,12 +6,15 @@ public class Value {
     private ValueHeapObject v = new ValueHeapObject();
 
     public enum Type {
+        ARRAY,
         OBJECT,
-        STRING
+        STRING,
+        DOUBLE
     }
 
     public class ValueHeapObject {
         private HeapEntity h;
+        private double d;
 
         public HeapEntity getH() {
             return h;
@@ -19,6 +22,14 @@ public class Value {
 
         public void setH(HeapEntity h) {
             this.h = h;
+        }
+
+        public double getD() {
+            return d;
+        }
+
+        public void setD(double d) {
+            this.d = d;
         }
     }
 

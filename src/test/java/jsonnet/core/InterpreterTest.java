@@ -47,6 +47,36 @@ public class InterpreterTest {
         String json = interpreter.evaluate(ast, 0);
 
         // then
-        assertEquals("{fieldKey:fieldValue}", json);
+        assertEquals("{\r\n  \"fieldKey\": \"fieldValue\"\r\n}", json);
+    }
+
+    @Test
+    public void shouldReturnObjectWithArray() throws Exception {
+        // given
+        LiteralString key = new LiteralString("array", LiteralString.TokenKind.DOUBLE);
+        List<Element> elements = new ArrayList<>();
+        elements.add(new Element(new LiteralNumber("1")));
+        elements.add(new Element(new LiteralNumber("2")));
+        elements.add(new Element(new LiteralNumber("3")));
+        Array value = new Array(elements, false);
+        Local body = new Local(value);
+        Field field = new Field(key, body);
+        List<Field> fields = new ArrayList<>();
+        fields.add(field);
+        List<AST> asts = new ArrayList<>();
+        DesugaredObject object = new DesugaredObject(fields, asts);
+        Local ast = new Local(object);
+
+        // when
+        String json = interpreter.evaluate(ast, 0);
+
+        // then
+        assertEquals("{\r\n" +
+                "  \"array\": [\r\n" +
+                "    1,\r\n" +
+                "    2,\r\n" +
+                "    3\r\n" +
+                "  ]\r\n" +
+                "}", json);
     }
 }
